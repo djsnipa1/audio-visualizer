@@ -1,5 +1,8 @@
 {
+  "scripts": {
+    "start": "servor . index.html 3001 --reload --browse"
+  },
   "devDependencies": {
-    "eslint": "^8.8.0"
+    "servor": "^4.0.2"
   }
 }
