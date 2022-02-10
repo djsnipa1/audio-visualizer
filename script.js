@@ -14,7 +14,6 @@ if (AudioContext) {
         'Sorry, but the Web Audio API is not supported by your browser. Please, consider upgrading to the latest version or downloading Google Chrome or Mozilla Firefox'
     );
 }
-//audio1.src = 'psysounds/psy_sound2.wav';
 
 //const audioCtx = new AudioContext();
 console.log(audioCtx);
@@ -31,6 +30,9 @@ let analyser;
 
 container.addEventListener('click', function () {
     const audio1 = document.getElementById('audio1');
+    // a file that is easy to automatically play a file without loading a new one
+    audio1.src = 'psysounds/psy_sound2.wav';
+
     const audioCtx = new AudioContext();
     audio1.play();
     audioSource = audioCtx.createMediaElementSource(audio1);
@@ -38,10 +40,10 @@ container.addEventListener('click', function () {
     audioSource.connect(analyser);
     analyser.connect(audioCtx.destination);
     analyser.fftSize = 64;
-    const bufferLegnth = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLegnth);
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
 
-    const barWidth = canvas.width / bufferLegnth;
+    const barWidth = canvas.width / bufferLength;
     let barHeight;
     let x;
 
@@ -49,17 +51,20 @@ container.addEventListener('click', function () {
         x = 0;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         analyser.getByteFrequencyData(dataArray);
-        for (let i = 0; i < bufferLegnth; i++) {
-            barHeight = dataArray[i];
-            ctx.fillStyle = 'white';
-            ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-            x += barWidth;
-        }
         requestAnimationFrame(animate);
+        drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray);
     }
     animate();
-
 });
+
+function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray) {
+    for (let i = 0; i < bufferLength; i++) {
+        barHeight = dataArray[i];
+        ctx.fillStyle = 'white';
+        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        x += barWidth;
+    }
+}
 
 file.addEventListener('change', function () {
     const files = this.files;
