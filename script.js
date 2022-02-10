@@ -39,7 +39,7 @@ container.addEventListener('click', function () {
     analyser = audioCtx.createAnalyser();
     audioSource.connect(analyser);
     analyser.connect(audioCtx.destination);
-    analyser.fftSize = 64;
+    analyser.fftSize = 128;
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
 
@@ -59,8 +59,11 @@ container.addEventListener('click', function () {
 
 function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray) {
     for (let i = 0; i < bufferLength; i++) {
-        barHeight = dataArray[i];
-        ctx.fillStyle = 'white';
+        barHeight = dataArray[i] * 1.5;
+        const red = i * barHeight / 20;
+        const green = i * 4;
+        const blue = barHeight / 2;
+        ctx.fillStyle = 'rgb(' + red + ',' + green + ',' + blue + ')';
         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
         x += barWidth;
     }
